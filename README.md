@@ -1,14 +1,12 @@
 # Trace Agent
 
-**一个能解释“失败以后怎么办”的 Agent 工程项目：持久检查点、受限工具、恢复与可观测执行轨迹。**
+具有持久检查点和执行日志的工具调用运行时。支持暂停恢复、受限只读工具、有界重试和独立 HTML 轨迹报告。
 
 ![项目概览示意图，非界面截图](docs/preview.svg)
 
-默认零 API key、零运行时第三方依赖。离线演示采用明确标注的**规则策略模拟器**；也提供可选的 OpenAI-compatible Chat Completions 工具调用适配器。重点是把计划、权限、重试、工具结果和恢复语义做成可以检查的代码，而不是把离线策略包装成大模型能力。
+运行时只依赖 Python 标准库。默认使用确定性的离线规则策略，不需要 API key；设置 `--provider chat` 可接入支持工具调用的 OpenAI-compatible Chat Completions 服务。两种策略共用状态机、工具授权、执行预算和持久化逻辑。
 
-**适合关注：** Agent runtime、tool calling、状态机、SQLite 事务、故障注入、可复现评测。
-
-## 30 秒体验
+## 快速开始
 
 Python 3.11+，从仓库目录执行：
 
@@ -19,13 +17,13 @@ python -m trace_agent evaluate
 
 打开 `out/demo/index.html` 查看任务、来源引用和逐事件轨迹；打开 `out/evaluation/index.html` 查看故障案例。两个报告均为单文件 HTML，可直接离线打开。
 
-`demo` 真的执行“搜索后暂停 → 关闭数据库连接 → 重开连接 → 从检查点继续”。已有运行的暂停与继续：
+`demo` 执行“搜索后暂停 → 关闭数据库连接 → 重开连接 → 从检查点继续”。也可以手动创建、暂停和恢复任务：
 
 ```bash
 python -m trace_agent run "缓存 cache 故障根因是什么？" --stop-after 1
 # 把输出的 run_id 代入下一条命令
-python -m trace_agent resume <run_id>
-python -m trace_agent inspect <run_id> --out out/inspect
+python -m trace_agent resume RUN_ID
+python -m trace_agent inspect RUN_ID --out out/inspect
 python -m trace_agent run "计算: (128 - 96) / 128 * 100"
 ```
 
@@ -37,7 +35,7 @@ trace-agent demo --out out/demo
 python -m pytest -q
 ```
 
-## 实现了什么
+## 运行时能力
 
 | 能力 | 具体实现 | 可以检查的证据 |
 |---|---|---|
@@ -50,7 +48,18 @@ python -m pytest -q
 | 可观测性 | journal 中保留计划、调用、重试、暂停与完成事件；HTML 可展开检查 | [演示报告](artifacts/demo/index.html) |
 | 可选真实模型路径 | 串行 tool calling、环境变量凭据、HTTPS、禁止重定向、响应结构验证 | [planners.py](trace_agent/planners.py) |
 
-内置 `search` 是中英文 token overlap 基线，离线策略是“搜索 → 读前两篇 → 按词项重合摘录来源行”。它没有语义推理、重排序模型或长期记忆。工程问题与检索算法的复杂度在这里有意分开，便于面试时逐层讲清。
+内置 `search` 使用中英文词项重合排序。离线策略先搜索，再读取前两篇文档，最后按来源行与查询的词项重合摘录证据。检索与规划通过接口独立于运行时，后续可替换为专门的检索器或模型策略。
+
+```mermaid
+flowchart LR
+    Task[Task + budgets] --> Planner[Planner]
+    Planner --> Guard[Validate action]
+    Guard --> Pending[Persist pending action]
+    Pending --> Tool[Execute read-only tool]
+    Tool --> Commit[Atomic result + checkpoint + journal]
+    Commit --> Planner
+    Planner --> Final[Final answer + citation guard]
+```
 
 ## 本地实测
 
@@ -64,11 +73,11 @@ python -m pytest -q
 | 默认 demo 的工具调用 | **3**：search、read、read |
 | 默认 demo 的决策次数 | **4**：3 次工具决策 + 1 次结束 |
 
-唯一跳过的测试需要 Windows 创建符号链接权限。本地附带 Python 3.11/3.12/3.13 的 CI 模板；当前发布版本未上传 workflow，未声明远程 CI 结果。可在启用 GitHub Actions 后自行添加该模板。
+唯一跳过的测试需要 Windows 创建符号链接权限。这里记录的是本地运行结果。
 
 11 个案例分别覆盖带引用回答、阈值证据、算术、未知问题拒答、连接重开后的恢复、瞬时故障、重试耗尽、工具白名单、路径穿越、决策预算和伪造引用。[完整结果 JSON](artifacts/evaluation/evaluation.json) 与 [演示 trace JSON](artifacts/demo/trace.json) 均来自实际运行。
 
-**这不是通用智能基准。** 4 篇原创虚构文档和固定案例只能证明这些实现路径满足断言；不能证明真实 LLM 的任务成功率、抗提示注入能力或线上性能。在线适配器只有 mock 合约测试，本次没有用真实 key 调用。
+评测使用 4 篇虚构运维文档，目标是验证执行和恢复语义。在线适配器通过 mock 合约测试，尚未记录真实服务上的任务成功率、提示注入评测或延迟基准。
 
 ## 替换为自己的知识库
 
@@ -92,19 +101,19 @@ python -m trace_agent run "缓存故障的根因和修复方式是什么？" --p
 
 Bash 可用 `export TRACE_AGENT_API_KEY=...` 等价设置。该路径会把任务和工具读取到的文档内容发往指定服务；API key 不写入状态或报告。支持 HTTPS，以及本地开发所需的 loopback HTTP。默认拒绝 HTTP 重定向，避免认证头被转发。兼容端点需支持 `/chat/completions`、`tools` 和 `parallel_tool_calls=false`。每次请求超时 30 秒；预算控制次数，不控制美元成本。重试费用由服务提供方计费规则决定。
 
-## 面试时值得讲清的取舍
+## 运行边界
 
-1. 为什么结果、journal 和 checkpoint 需要原子提交？提交前后各崩溃会发生什么？
-2. 为什么本地去重账本仍不能保证外部支付/发信 exactly-once？
-3. 哪些异常能重试，为什么权限错误不重试？全局预算与单步重试怎么交互？
-4. 为什么一个合规的引用仍可能不支持答案？下一步如何做主张级评测？
-5. 单 worker 状态机如何演进到有租约、调度和外部幂等键的多 worker 系统？
+- 单个 run 同时只由一个 worker 执行；SQLite revision 检查防止陈旧状态提交，但没有分布式租约。
+- 工具返回到结果提交之间发生崩溃时，工具可能再次执行。内置工具只读；新增写操作需要下游幂等键。
+- 引用检查验证来源行是否已读取，不判断该行是否支持答案中的每个主张。
+- 路径约束针对受信任、静态的本地文档目录，不提供操作系统级沙箱或文件变动隔离。
+- 次数预算不等价于 token、费用或任务总时长预算。
 
-[设计与恢复语义](docs/design.md) · [面试讲解与追问](docs/interview.md)
+使用方法、参数、输出和排障见 [CLI 与配置](docs/usage.md)；状态转换、事务边界和扩展点见 [设计与恢复语义](docs/design.md)。
 
-项目定位是可运行的个人工程练习，没有生产流量、客户部署或真实业务收益声明。所有 fixture 与示例业务数值均为原创虚构数据。MIT License。
+MIT License。仓库中的运维文档和业务数值均为测试 fixture。
 
 ## English overview
 
-A dependency-free, inspectable agent runtime with SQLite checkpoints, an atomic result journal, read-only tools, bounded retries, provenance checks, failure injection and standalone HTML traces. The default planner is a deterministic offline simulator. A real Chat Completions adapter is opt-in; live-model performance is not claimed.
+A dependency-free agent runtime with SQLite checkpoints, an atomic result journal, read-only tools, bounded retries, provenance checks, failure injection and standalone HTML traces. The default planner is a deterministic offline policy. A Chat Completions adapter is available through explicit configuration and is covered by mock contract tests.
 

@@ -5,11 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "trace-agent"
 version = "0.1.0"
-description = "A small, inspectable agent runtime with durable checkpoints, bounded tools and reproducible failure evaluations"
+description = "Durable agent tool execution with SQLite checkpoints, bounded retries and execution traces"
+readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []
 license = "MIT"
-authors = [{name = "Portfolio contributors"}]
+authors = [{name = "cl-user-blip"}]
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<10"]
