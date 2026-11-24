@@ -1,0 +1,75 @@
+{
+  "suite": "original-fixture engineering regression",
+  "provider": "offline-rule-simulator",
+  "live_api_calls": 0,
+  "passed": 11,
+  "total": 11,
+  "cases": [
+    {
+      "name": "grounded incident",
+      "purpose": "检索、读取、引用原始证据",
+      "passed": true,
+      "observed": "completed; 3 tools"
+    },
+    {
+      "name": "rollback evidence",
+      "purpose": "跨文档搜索后保留精确阈值",
+      "passed": true,
+      "observed": "completed"
+    },
+    {
+      "name": "bounded arithmetic",
+      "purpose": "算术工具得到真实数值",
+      "passed": true,
+      "observed": 25.0
+    },
+    {
+      "name": "unknown question",
+      "purpose": "未找到证据时明确拒答",
+      "passed": true,
+      "observed": "completed"
+    },
+    {
+      "name": "checkpoint resume",
+      "purpose": "关闭连接后恢复且不重做已提交调用",
+      "passed": true,
+      "observed": "committed first-call results=1"
+    },
+    {
+      "name": "transient retry",
+      "purpose": "只对标记为 transient 的异常重试",
+      "passed": true,
+      "observed": "retry events=1; attempts=4"
+    },
+    {
+      "name": "bounded retries",
+      "purpose": "持续故障在三次尝试后停止",
+      "passed": true,
+      "observed": "failed; attempts=3"
+    },
+    {
+      "name": "tool allowlist",
+      "purpose": "未知工具在执行前被拒绝",
+      "passed": true,
+      "observed": "failed; attempts=0"
+    },
+    {
+      "name": "path confinement",
+      "purpose": "路径穿越被拒绝且不重试",
+      "passed": true,
+      "observed": "failed; attempts=1"
+    },
+    {
+      "name": "decision budget",
+      "purpose": "无限计划在预算边界终止",
+      "passed": true,
+      "observed": "budget_exceeded; decisions=2"
+    },
+    {
+      "name": "citation provenance",
+      "purpose": "拒绝引用未读取的来源行",
+      "passed": true,
+      "observed": "failed"
+    }
+  ]
+}

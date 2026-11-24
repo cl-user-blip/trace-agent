@@ -1,0 +1,509 @@
+{
+  "state": {
+    "answer": "离线证据摘录（规则策略，未调用大模型）：\n- 缓存 cache 故障根因为新配置遗漏 namespace 前缀，导致有效缓存键无法命中。 [incident.md:L5]\n- 虚构的缓存故障发生于一次配置切换，缓存命中率从 92% 降到 37%。 [incident.md:L4]",
+    "attempts": 3,
+    "decisions": 4,
+    "history": [
+      {
+        "call_id": "call_e06e88a3753d_1",
+        "name": "search",
+        "arguments": {
+          "query": "缓存 cache 故障根因是什么？",
+          "limit": 3
+        },
+        "result": {
+          "hits": [
+            {
+              "path": "incident.md",
+              "score": 5,
+              "matched_terms": [
+                "cache",
+                "故障",
+                "根因",
+                "缓存",
+                "障根"
+              ]
+            },
+            {
+              "path": "deployment.md",
+              "score": 1,
+              "matched_terms": [
+                "故障"
+              ]
+            }
+          ],
+          "query": "缓存 cache 故障根因是什么？",
+          "method": "token-overlap baseline"
+        }
+      },
+      {
+        "call_id": "call_e06e88a3753d_2",
+        "name": "read",
+        "arguments": {
+          "path": "incident.md",
+          "start": 1,
+          "limit": 80
+        },
+        "result": {
+          "path": "incident.md",
+          "lines": [
+            {
+              "line": 1,
+              "text": "# 缓存故障复盘（原创演示数据）",
+              "citation": "[incident.md:L1]"
+            },
+            {
+              "line": 2,
+              "text": "",
+              "citation": "[incident.md:L2]"
+            },
+            {
+              "line": 3,
+              "text": "## 现象 cache incident",
+              "citation": "[incident.md:L3]"
+            },
+            {
+              "line": 4,
+              "text": "虚构的缓存故障发生于一次配置切换，缓存命中率从 92% 降到 37%。",
+              "citation": "[incident.md:L4]"
+            },
+            {
+              "line": 5,
+              "text": "缓存 cache 故障根因为新配置遗漏 namespace 前缀，导致有效缓存键无法命中。",
+              "citation": "[incident.md:L5]"
+            },
+            {
+              "line": 6,
+              "text": "故障修复方式为回滚配置，并在配置发布前加入 namespace 一致性测试。",
+              "citation": "[incident.md:L6]"
+            },
+            {
+              "line": 7,
+              "text": "恢复耗时为 18 分钟；这是演示数值。",
+              "citation": "[incident.md:L7]"
+            },
+            {
+              "line": 8,
+              "text": "",
+              "citation": "[incident.md:L8]"
+            },
+            {
+              "line": 9,
+              "text": "## 后续行动 prevention",
+              "citation": "[incident.md:L9]"
+            },
+            {
+              "line": 10,
+              "text": "配置测试覆盖多租户 namespace，发布监控同时检查命中率与数据库 QPS。",
+              "citation": "[incident.md:L10]"
+            },
+            {
+              "line": 11,
+              "text": "不应把文档中的建议自动执行为生产操作。",
+              "citation": "[incident.md:L11]"
+            },
+            {
+              "line": 12,
+              "text": "",
+              "citation": "[incident.md:L12]"
+            }
+          ],
+          "total_lines": 12
+        }
+      },
+      {
+        "call_id": "call_e06e88a3753d_3",
+        "name": "read",
+        "arguments": {
+          "path": "deployment.md",
+          "start": 1,
+          "limit": 80
+        },
+        "result": {
+          "path": "deployment.md",
+          "lines": [
+            {
+              "line": 1,
+              "text": "# Orbit Search 部署手册（原创演示数据）",
+              "citation": "[deployment.md:L1]"
+            },
+            {
+              "line": 2,
+              "text": "",
+              "citation": "[deployment.md:L2]"
+            },
+            {
+              "line": 3,
+              "text": "此文档与所有数值均为虚构工程案例，不代表真实公司的服务。",
+              "citation": "[deployment.md:L3]"
+            },
+            {
+              "line": 4,
+              "text": "",
+              "citation": "[deployment.md:L4]"
+            },
+            {
+              "line": 5,
+              "text": "## 发布流程 deployment",
+              "citation": "[deployment.md:L5]"
+            },
+            {
+              "line": 6,
+              "text": "Orbit Search 使用 blue-green 蓝绿部署。先向候选实例发送 5% 的流量，再检查错误率。",
+              "citation": "[deployment.md:L6]"
+            },
+            {
+              "line": 7,
+              "text": "回滚 rollback 的触发条件为连续 3 分钟错误率超过 2%。",
+              "citation": "[deployment.md:L7]"
+            },
+            {
+              "line": 8,
+              "text": "回滚操作由值班人员在部署平台确认；本项目的工具没有部署权限。",
+              "citation": "[deployment.md:L8]"
+            },
+            {
+              "line": 9,
+              "text": "部署前需验证索引版本、配置校验和以及查询延迟。",
+              "citation": "[deployment.md:L9]"
+            },
+            {
+              "line": 10,
+              "text": "",
+              "citation": "[deployment.md:L10]"
+            },
+            {
+              "line": 11,
+              "text": "## 健康检查 health check",
+              "citation": "[deployment.md:L11]"
+            },
+            {
+              "line": 12,
+              "text": "就绪检查要求 search API 可访问，且索引版本等于 manifest 中的版本。",
+              "citation": "[deployment.md:L12]"
+            },
+            {
+              "line": 13,
+              "text": "存活检查只验证进程事件循环，避免下游故障触发无限重启。",
+              "citation": "[deployment.md:L13]"
+            },
+            {
+              "line": 14,
+              "text": "",
+              "citation": "[deployment.md:L14]"
+            }
+          ],
+          "total_lines": 14
+        }
+      }
+    ],
+    "id": "e06e88a3753d",
+    "knowledge_root": "<knowledge-root>",
+    "limits": {
+      "max_attempts": 20,
+      "max_retries": 2,
+      "max_steps": 12
+    },
+    "pending": null,
+    "planner_failures": 0,
+    "provider": "offline",
+    "revision": 10,
+    "status": "completed",
+    "task": "缓存 cache 故障根因是什么？"
+  },
+  "events": [
+    {
+      "seq": 167,
+      "kind": "created",
+      "time": "2026-11-24T13:08:58.066147+00:00",
+      "payload": {
+        "provider": "offline",
+        "task": "缓存 cache 故障根因是什么？"
+      }
+    },
+    {
+      "seq": 168,
+      "kind": "planned",
+      "time": "2026-11-24T13:08:58.173780+00:00",
+      "payload": {
+        "action": {
+          "arguments": {
+            "limit": 3,
+            "query": "缓存 cache 故障根因是什么？"
+          },
+          "name": "search",
+          "type": "tool"
+        },
+        "attempts": 0,
+        "call_id": "call_e06e88a3753d_1"
+      }
+    },
+    {
+      "seq": 169,
+      "kind": "tool_started",
+      "time": "2026-11-24T13:08:58.205789+00:00",
+      "payload": {
+        "attempt": 1,
+        "call_id": "call_e06e88a3753d_1"
+      }
+    },
+    {
+      "seq": 170,
+      "kind": "tool_result",
+      "time": "2026-11-24T13:08:58.243121+00:00",
+      "payload": {
+        "cached": false,
+        "call_id": "call_e06e88a3753d_1",
+        "name": "search",
+        "result": {
+          "hits": [
+            {
+              "matched_terms": [
+                "cache",
+                "故障",
+                "根因",
+                "缓存",
+                "障根"
+              ],
+              "path": "incident.md",
+              "score": 5
+            },
+            {
+              "matched_terms": [
+                "故障"
+              ],
+              "path": "deployment.md",
+              "score": 1
+            }
+          ],
+          "method": "token-overlap baseline",
+          "query": "缓存 cache 故障根因是什么？"
+        }
+      }
+    },
+    {
+      "seq": 171,
+      "kind": "planned",
+      "time": "2026-11-24T13:08:58.283413+00:00",
+      "payload": {
+        "action": {
+          "arguments": {
+            "limit": 80,
+            "path": "incident.md",
+            "start": 1
+          },
+          "name": "read",
+          "type": "tool"
+        },
+        "attempts": 0,
+        "call_id": "call_e06e88a3753d_2"
+      }
+    },
+    {
+      "seq": 172,
+      "kind": "tool_started",
+      "time": "2026-11-24T13:08:58.316691+00:00",
+      "payload": {
+        "attempt": 1,
+        "call_id": "call_e06e88a3753d_2"
+      }
+    },
+    {
+      "seq": 173,
+      "kind": "tool_result",
+      "time": "2026-11-24T13:08:58.372058+00:00",
+      "payload": {
+        "cached": false,
+        "call_id": "call_e06e88a3753d_2",
+        "name": "read",
+        "result": {
+          "lines": [
+            {
+              "citation": "[incident.md:L1]",
+              "line": 1,
+              "text": "# 缓存故障复盘（原创演示数据）"
+            },
+            {
+              "citation": "[incident.md:L2]",
+              "line": 2,
+              "text": ""
+            },
+            {
+              "citation": "[incident.md:L3]",
+              "line": 3,
+              "text": "## 现象 cache incident"
+            },
+            {
+              "citation": "[incident.md:L4]",
+              "line": 4,
+              "text": "虚构的缓存故障发生于一次配置切换，缓存命中率从 92% 降到 37%。"
+            },
+            {
+              "citation": "[incident.md:L5]",
+              "line": 5,
+              "text": "缓存 cache 故障根因为新配置遗漏 namespace 前缀，导致有效缓存键无法命中。"
+            },
+            {
+              "citation": "[incident.md:L6]",
+              "line": 6,
+              "text": "故障修复方式为回滚配置，并在配置发布前加入 namespace 一致性测试。"
+            },
+            {
+              "citation": "[incident.md:L7]",
+              "line": 7,
+              "text": "恢复耗时为 18 分钟；这是演示数值。"
+            },
+            {
+              "citation": "[incident.md:L8]",
+              "line": 8,
+              "text": ""
+            },
+            {
+              "citation": "[incident.md:L9]",
+              "line": 9,
+              "text": "## 后续行动 prevention"
+            },
+            {
+              "citation": "[incident.md:L10]",
+              "line": 10,
+              "text": "配置测试覆盖多租户 namespace，发布监控同时检查命中率与数据库 QPS。"
+            },
+            {
+              "citation": "[incident.md:L11]",
+              "line": 11,
+              "text": "不应把文档中的建议自动执行为生产操作。"
+            },
+            {
+              "citation": "[incident.md:L12]",
+              "line": 12,
+              "text": ""
+            }
+          ],
+          "path": "incident.md",
+          "total_lines": 12
+        }
+      }
+    },
+    {
+      "seq": 174,
+      "kind": "planned",
+      "time": "2026-11-24T13:08:58.404921+00:00",
+      "payload": {
+        "action": {
+          "arguments": {
+            "limit": 80,
+            "path": "deployment.md",
+            "start": 1
+          },
+          "name": "read",
+          "type": "tool"
+        },
+        "attempts": 0,
+        "call_id": "call_e06e88a3753d_3"
+      }
+    },
+    {
+      "seq": 175,
+      "kind": "tool_started",
+      "time": "2026-11-24T13:08:58.448819+00:00",
+      "payload": {
+        "attempt": 1,
+        "call_id": "call_e06e88a3753d_3"
+      }
+    },
+    {
+      "seq": 176,
+      "kind": "tool_result",
+      "time": "2026-11-24T13:08:58.493755+00:00",
+      "payload": {
+        "cached": false,
+        "call_id": "call_e06e88a3753d_3",
+        "name": "read",
+        "result": {
+          "lines": [
+            {
+              "citation": "[deployment.md:L1]",
+              "line": 1,
+              "text": "# Orbit Search 部署手册（原创演示数据）"
+            },
+            {
+              "citation": "[deployment.md:L2]",
+              "line": 2,
+              "text": ""
+            },
+            {
+              "citation": "[deployment.md:L3]",
+              "line": 3,
+              "text": "此文档与所有数值均为虚构工程案例，不代表真实公司的服务。"
+            },
+            {
+              "citation": "[deployment.md:L4]",
+              "line": 4,
+              "text": ""
+            },
+            {
+              "citation": "[deployment.md:L5]",
+              "line": 5,
+              "text": "## 发布流程 deployment"
+            },
+            {
+              "citation": "[deployment.md:L6]",
+              "line": 6,
+              "text": "Orbit Search 使用 blue-green 蓝绿部署。先向候选实例发送 5% 的流量，再检查错误率。"
+            },
+            {
+              "citation": "[deployment.md:L7]",
+              "line": 7,
+              "text": "回滚 rollback 的触发条件为连续 3 分钟错误率超过 2%。"
+            },
+            {
+              "citation": "[deployment.md:L8]",
+              "line": 8,
+              "text": "回滚操作由值班人员在部署平台确认；本项目的工具没有部署权限。"
+            },
+            {
+              "citation": "[deployment.md:L9]",
+              "line": 9,
+              "text": "部署前需验证索引版本、配置校验和以及查询延迟。"
+            },
+            {
+              "citation": "[deployment.md:L10]",
+              "line": 10,
+              "text": ""
+            },
+            {
+              "citation": "[deployment.md:L11]",
+              "line": 11,
+              "text": "## 健康检查 health check"
+            },
+            {
+              "citation": "[deployment.md:L12]",
+              "line": 12,
+              "text": "就绪检查要求 search API 可访问，且索引版本等于 manifest 中的版本。"
+            },
+            {
+              "citation": "[deployment.md:L13]",
+              "line": 13,
+              "text": "存活检查只验证进程事件循环，避免下游故障触发无限重启。"
+            },
+            {
+              "citation": "[deployment.md:L14]",
+              "line": 14,
+              "text": ""
+            }
+          ],
+          "path": "deployment.md",
+          "total_lines": 14
+        }
+      }
+    },
+    {
+      "seq": 177,
+      "kind": "completed",
+      "time": "2026-11-24T13:08:58.548897+00:00",
+      "payload": {
+        "answer": "离线证据摘录（规则策略，未调用大模型）：\n- 缓存 cache 故障根因为新配置遗漏 namespace 前缀，导致有效缓存键无法命中。 [incident.md:L5]\n- 虚构的缓存故障发生于一次配置切换，缓存命中率从 92% 降到 37%。 [incident.md:L4]"
+      }
+    }
+  ]
+}

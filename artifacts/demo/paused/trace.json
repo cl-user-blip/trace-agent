@@ -1,0 +1,135 @@
+{
+  "state": {
+    "answer": null,
+    "attempts": 1,
+    "decisions": 1,
+    "history": [
+      {
+        "call_id": "call_4aaa7f504e53_1",
+        "name": "search",
+        "arguments": {
+          "query": "缓存 cache 故障根因是什么，如何修复？",
+          "limit": 3
+        },
+        "result": {
+          "hits": [
+            {
+              "path": "incident.md",
+              "score": 6,
+              "matched_terms": [
+                "cache",
+                "修复",
+                "故障",
+                "根因",
+                "缓存",
+                "障根"
+              ]
+            },
+            {
+              "path": "deployment.md",
+              "score": 1,
+              "matched_terms": [
+                "故障"
+              ]
+            }
+          ],
+          "query": "缓存 cache 故障根因是什么，如何修复？",
+          "method": "token-overlap baseline"
+        }
+      }
+    ],
+    "id": "4aaa7f504e53",
+    "knowledge_root": "<knowledge-root>",
+    "limits": {
+      "max_attempts": 20,
+      "max_retries": 2,
+      "max_steps": 12
+    },
+    "pending": null,
+    "planner_failures": 0,
+    "provider": "offline",
+    "revision": 4,
+    "status": "paused",
+    "task": "缓存 cache 故障根因是什么，如何修复？"
+  },
+  "events": [
+    {
+      "seq": 27,
+      "kind": "created",
+      "time": "2026-11-24T13:08:57.153856+00:00",
+      "payload": {
+        "provider": "offline",
+        "task": "缓存 cache 故障根因是什么，如何修复？"
+      }
+    },
+    {
+      "seq": 28,
+      "kind": "planned",
+      "time": "2026-11-24T13:08:57.266960+00:00",
+      "payload": {
+        "action": {
+          "arguments": {
+            "limit": 3,
+            "query": "缓存 cache 故障根因是什么，如何修复？"
+          },
+          "name": "search",
+          "type": "tool"
+        },
+        "attempts": 0,
+        "call_id": "call_4aaa7f504e53_1"
+      }
+    },
+    {
+      "seq": 29,
+      "kind": "tool_started",
+      "time": "2026-11-24T13:08:57.299463+00:00",
+      "payload": {
+        "attempt": 1,
+        "call_id": "call_4aaa7f504e53_1"
+      }
+    },
+    {
+      "seq": 30,
+      "kind": "tool_result",
+      "time": "2026-11-24T13:08:57.335224+00:00",
+      "payload": {
+        "cached": false,
+        "call_id": "call_4aaa7f504e53_1",
+        "name": "search",
+        "result": {
+          "hits": [
+            {
+              "matched_terms": [
+                "cache",
+                "修复",
+                "故障",
+                "根因",
+                "缓存",
+                "障根"
+              ],
+              "path": "incident.md",
+              "score": 6
+            },
+            {
+              "matched_terms": [
+                "故障"
+              ],
+              "path": "deployment.md",
+              "score": 1
+            }
+          ],
+          "method": "token-overlap baseline",
+          "query": "缓存 cache 故障根因是什么，如何修复？"
+        }
+      }
+    },
+    {
+      "seq": 31,
+      "kind": "paused",
+      "time": "2026-11-24T13:08:57.376756+00:00",
+      "payload": {
+        "completed_tools_this_invocation": 1
+      }
+    }
+  ]
+}

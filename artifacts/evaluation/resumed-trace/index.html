@@ -1,0 +1,246 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Trace Agent · Execution Trace</title><style>
+:root{font-family:Inter,'Segoe UI','Microsoft YaHei',sans-serif;color:#dce5f1;background:#0c1323}
+*{box-sizing:border-box}body{margin:0}main{max-width:1120px;margin:auto;padding:60px 34px}
+.eyebrow{letter-spacing:3px;font-size:12px;color:#5de4c7}h1{font-size:clamp(32px,5vw,58px);letter-spacing:-2px;margin:14px 0}h2{font-size:24px;margin-top:34px}
+p{color:#a7b8ce;line-height:1.8}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:32px 0}
+.card,.panel{background:#141f32;border:1px solid #29384e;border-radius:14px;padding:22px}.card strong{display:block;font-size:32px;color:#fff;margin-top:12px}
+.badge{padding:6px 10px;background:#174c47;border-radius:18px;color:#76f0d1;font-size:12px}pre{white-space:pre-wrap;word-break:break-word;line-height:1.65;font-size:13px}
+details{border-left:2px solid #3d5a75;margin:12px 0;padding:12px 20px;background:#101a2c}summary{cursor:pointer;font-weight:600}summary small{color:#8ba4bd;margin-left:14px}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:14px 10px;border-bottom:1px solid #29384e;font-size:14px}th{color:#72dfc5}
+footer{color:#7188a3;margin-top:42px;font-size:12px}a{color:#76e0cc}.pass{color:#70e2be}.fail{color:#ffaf9b}
+</style><main><div class="eyebrow">DURABLE AGENT RUNTIME / TRACE VIEWER</div><h1>每一步，都可以追踪。</h1>
+<p>本次运行使用 <span class="badge">offline</span> 策略。状态、工具参数、重试与引用均写入 SQLite journal。</p>
+<div class="cards"><div class="card">STATE<strong>completed</strong></div><div class="card">DECISIONS<strong>4</strong></div><div class="card">TOOL ATTEMPTS<strong>3</strong></div><div class="card">EVENTS<strong>13</strong></div></div>
+<h2>任务与结果</h2><div class="panel"><p>缓存 cache 故障根因是什么？</p><pre>离线证据摘录（规则策略，未调用大模型）：
+- 缓存 cache 故障根因为新配置遗漏 namespace 前缀，导致有效缓存键无法命中。 [incident.md:L5]
+- 虚构的缓存故障发生于一次配置切换，缓存命中率从 92% 降到 37%。 [incident.md:L4]</pre></div>
+<h2>完整执行轨迹</h2><p>点击事件查看真实参数和观测结果；此视图不展示模型隐藏推理。</p><details><summary>01 · created<small>13:08:59.355 UTC</small></summary><pre>{
+  &quot;provider&quot;: &quot;offline&quot;,
+  &quot;task&quot;: &quot;缓存 cache 故障根因是什么？&quot;
+}</pre></details><details><summary>02 · planned<small>13:08:59.388 UTC</small></summary><pre>{
+  &quot;action&quot;: {
+    &quot;arguments&quot;: {
+      &quot;limit&quot;: 3,
+      &quot;query&quot;: &quot;缓存 cache 故障根因是什么？&quot;
+    },
+    &quot;name&quot;: &quot;search&quot;,
+    &quot;type&quot;: &quot;tool&quot;
+  },
+  &quot;attempts&quot;: 0,
+  &quot;call_id&quot;: &quot;call_773f09d57c3e_1&quot;
+}</pre></details><details><summary>03 · tool_started<small>13:08:59.421 UTC</small></summary><pre>{
+  &quot;attempt&quot;: 1,
+  &quot;call_id&quot;: &quot;call_773f09d57c3e_1&quot;
+}</pre></details><details><summary>04 · tool_result<small>13:08:59.457 UTC</small></summary><pre>{
+  &quot;cached&quot;: false,
+  &quot;call_id&quot;: &quot;call_773f09d57c3e_1&quot;,
+  &quot;name&quot;: &quot;search&quot;,
+  &quot;result&quot;: {
+    &quot;hits&quot;: [
+      {
+        &quot;matched_terms&quot;: [
+          &quot;cache&quot;,
+          &quot;故障&quot;,
+          &quot;根因&quot;,
+          &quot;缓存&quot;,
+          &quot;障根&quot;
+        ],
+        &quot;path&quot;: &quot;incident.md&quot;,
+        &quot;score&quot;: 5
+      },
+      {
+        &quot;matched_terms&quot;: [
+          &quot;故障&quot;
+        ],
+        &quot;path&quot;: &quot;deployment.md&quot;,
+        &quot;score&quot;: 1
+      }
+    ],
+    &quot;method&quot;: &quot;token-overlap baseline&quot;,
+    &quot;query&quot;: &quot;缓存 cache 故障根因是什么？&quot;
+  }
+}</pre></details><details><summary>05 · paused<small>13:08:59.498 UTC</small></summary><pre>{
+  &quot;completed_tools_this_invocation&quot;: 1
+}</pre></details><details><summary>06 · resumed<small>13:08:59.579 UTC</small></summary><pre>{}</pre></details><details><summary>07 · planned<small>13:08:59.687 UTC</small></summary><pre>{
+  &quot;action&quot;: {
+    &quot;arguments&quot;: {
+      &quot;limit&quot;: 80,
+      &quot;path&quot;: &quot;incident.md&quot;,
+      &quot;start&quot;: 1
+    },
+    &quot;name&quot;: &quot;read&quot;,
+    &quot;type&quot;: &quot;tool&quot;
+  },
+  &quot;attempts&quot;: 0,
+  &quot;call_id&quot;: &quot;call_773f09d57c3e_2&quot;
+}</pre></details><details><summary>08 · tool_started<small>13:08:59.720 UTC</small></summary><pre>{
+  &quot;attempt&quot;: 1,
+  &quot;call_id&quot;: &quot;call_773f09d57c3e_2&quot;
+}</pre></details><details><summary>09 · tool_result<small>13:08:59.754 UTC</small></summary><pre>{
+  &quot;cached&quot;: false,
+  &quot;call_id&quot;: &quot;call_773f09d57c3e_2&quot;,
+  &quot;name&quot;: &quot;read&quot;,
+  &quot;result&quot;: {
+    &quot;lines&quot;: [
+      {
+        &quot;citation&quot;: &quot;[incident.md:L1]&quot;,
+        &quot;line&quot;: 1,
+        &quot;text&quot;: &quot;# 缓存故障复盘（原创演示数据）&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[incident.md:L2]&quot;,
+        &quot;line&quot;: 2,
+        &quot;text&quot;: &quot;&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[incident.md:L3]&quot;,
+        &quot;line&quot;: 3,
+        &quot;text&quot;: &quot;## 现象 cache incident&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[incident.md:L4]&quot;,
+        &quot;line&quot;: 4,
+        &quot;text&quot;: &quot;虚构的缓存故障发生于一次配置切换，缓存命中率从 92% 降到 37%。&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[incident.md:L5]&quot;,
+        &quot;line&quot;: 5,
+        &quot;text&quot;: &quot;缓存 cache 故障根因为新配置遗漏 namespace 前缀，导致有效缓存键无法命中。&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[incident.md:L6]&quot;,
+        &quot;line&quot;: 6,
+        &quot;text&quot;: &quot;故障修复方式为回滚配置，并在配置发布前加入 namespace 一致性测试。&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[incident.md:L7]&quot;,
+        &quot;line&quot;: 7,
+        &quot;text&quot;: &quot;恢复耗时为 18 分钟；这是演示数值。&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[incident.md:L8]&quot;,
+        &quot;line&quot;: 8,
+        &quot;text&quot;: &quot;&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[incident.md:L9]&quot;,
+        &quot;line&quot;: 9,
+        &quot;text&quot;: &quot;## 后续行动 prevention&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[incident.md:L10]&quot;,
+        &quot;line&quot;: 10,
+        &quot;text&quot;: &quot;配置测试覆盖多租户 namespace，发布监控同时检查命中率与数据库 QPS。&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[incident.md:L11]&quot;,
+        &quot;line&quot;: 11,
+        &quot;text&quot;: &quot;不应把文档中的建议自动执行为生产操作。&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[incident.md:L12]&quot;,
+        &quot;line&quot;: 12,
+        &quot;text&quot;: &quot;&quot;
+      }
+    ],
+    &quot;path&quot;: &quot;incident.md&quot;,
+    &quot;total_lines&quot;: 12
+  }
+}</pre></details><details><summary>10 · planned<small>13:08:59.786 UTC</small></summary><pre>{
+  &quot;action&quot;: {
+    &quot;arguments&quot;: {
+      &quot;limit&quot;: 80,
+      &quot;path&quot;: &quot;deployment.md&quot;,
+      &quot;start&quot;: 1
+    },
+    &quot;name&quot;: &quot;read&quot;,
+    &quot;type&quot;: &quot;tool&quot;
+  },
+  &quot;attempts&quot;: 0,
+  &quot;call_id&quot;: &quot;call_773f09d57c3e_3&quot;
+}</pre></details><details><summary>11 · tool_started<small>13:08:59.820 UTC</small></summary><pre>{
+  &quot;attempt&quot;: 1,
+  &quot;call_id&quot;: &quot;call_773f09d57c3e_3&quot;
+}</pre></details><details><summary>12 · tool_result<small>13:08:59.854 UTC</small></summary><pre>{
+  &quot;cached&quot;: false,
+  &quot;call_id&quot;: &quot;call_773f09d57c3e_3&quot;,
+  &quot;name&quot;: &quot;read&quot;,
+  &quot;result&quot;: {
+    &quot;lines&quot;: [
+      {
+        &quot;citation&quot;: &quot;[deployment.md:L1]&quot;,
+        &quot;line&quot;: 1,
+        &quot;text&quot;: &quot;# Orbit Search 部署手册（原创演示数据）&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[deployment.md:L2]&quot;,
+        &quot;line&quot;: 2,
+        &quot;text&quot;: &quot;&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[deployment.md:L3]&quot;,
+        &quot;line&quot;: 3,
+        &quot;text&quot;: &quot;此文档与所有数值均为虚构工程案例，不代表真实公司的服务。&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[deployment.md:L4]&quot;,
+        &quot;line&quot;: 4,
+        &quot;text&quot;: &quot;&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[deployment.md:L5]&quot;,
+        &quot;line&quot;: 5,
+        &quot;text&quot;: &quot;## 发布流程 deployment&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[deployment.md:L6]&quot;,
+        &quot;line&quot;: 6,
+        &quot;text&quot;: &quot;Orbit Search 使用 blue-green 蓝绿部署。先向候选实例发送 5% 的流量，再检查错误率。&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[deployment.md:L7]&quot;,
+        &quot;line&quot;: 7,
+        &quot;text&quot;: &quot;回滚 rollback 的触发条件为连续 3 分钟错误率超过 2%。&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[deployment.md:L8]&quot;,
+        &quot;line&quot;: 8,
+        &quot;text&quot;: &quot;回滚操作由值班人员在部署平台确认；本项目的工具没有部署权限。&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[deployment.md:L9]&quot;,
+        &quot;line&quot;: 9,
+        &quot;text&quot;: &quot;部署前需验证索引版本、配置校验和以及查询延迟。&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[deployment.md:L10]&quot;,
+        &quot;line&quot;: 10,
+        &quot;text&quot;: &quot;&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[deployment.md:L11]&quot;,
+        &quot;line&quot;: 11,
+        &quot;text&quot;: &quot;## 健康检查 health check&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[deployment.md:L12]&quot;,
+        &quot;line&quot;: 12,
+        &quot;text&quot;: &quot;就绪检查要求 search API 可访问，且索引版本等于 manifest 中的版本。&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[deployment.md:L13]&quot;,
+        &quot;line&quot;: 13,
+        &quot;text&quot;: &quot;存活检查只验证进程事件循环，避免下游故障触发无限重启。&quot;
+      },
+      {
+        &quot;citation&quot;: &quot;[deployment.md:L14]&quot;,
+        &quot;line&quot;: 14,
+        &quot;text&quot;: &quot;&quot;
+      }
+    ],
+    &quot;path&quot;: &quot;deployment.md&quot;,
+    &quot;total_lines&quot;: 14
+  }
+}</pre></details><details><summary>13 · completed<small>13:08:59.897 UTC</small></summary><pre>{
+  &quot;answer&quot;: &quot;离线证据摘录（规则策略，未调用大模型）：\n- 缓存 cache 故障根因为新配置遗漏 namespace 前缀，导致有效缓存键无法命中。 [incident.md:L5]\n- 虚构的缓存故障发生于一次配置切换，缓存命中率从 92% 降到 37%。 [incident.md:L4]&quot;
+}</pre></details><footer>TRACE AGENT · Original synthetic fixtures · Offline rule simulator · No live LLM evaluation</footer></main></html>

@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trace-agent"
+version = "0.1.0"
+description = "A small, inspectable agent runtime with durable checkpoints, bounded tools and reproducible failure evaluations"
+requires-python = ">=3.11"
+dependencies = []
+license = "MIT"
+authors = [{name = "Portfolio contributors"}]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10"]
+
+[project.scripts]
+trace-agent = "trace_agent.__main__:main"
+
+[tool.setuptools]
+packages = ["trace_agent"]
+
+[tool.setuptools.package-data]
+trace_agent = ["data/knowledge/*.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
